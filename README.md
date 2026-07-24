@@ -25,24 +25,28 @@ succeeding EVRT (2025). Designed and authored by **Arthur Valiev**.
 ```
 evrt2/
   README.md               ← this file
+  ROADMAP.md              ← implementation status + phased plan
   spec/
     EVRT2_OVERVIEW.md     ← high-level architecture
     EVRT2_PACKET.md       ← binary packet format (wire spec)
-    EVRT2_SDUDP.md        ← Super Dynamic UDP transport layer
-    EVRT2_SECURITY.md     ← auth, encryption, session tokens
+    EVRT2_SECURITY.md     ← auth, encryption, session tokens      [planned]
   codec/
     EVRT2CKMAX.md         ← codec overview and design goals
-    SILICON_PROBE.md      ← hardware detection and delegation
-    AR2R47_MODES.md       ← three codec operating modes
+    SILICON_PROBE.md      ← hardware detection and delegation     [planned]
   transport/
-    SDUDP.md              ← SD-UDP packet scheduling, jitter, FEC
-    FEEDBACK.md           ← receiver feedback loop v2
-    RELAY_TUNNEL.md       ← EVRT2 over TCP relay (fallback path)
+    SDUDP.md              ← SD-UDP scheduling, jitter, FEC, liveness
+    FEEDBACK.md           ← receiver feedback loop v2             [planned]
+    RELAY_TUNNEL.md       ← EVRT2 over TCP relay (fallback path)  [planned]
   modes/
-    AR_STATIC.md          ← AR mode: desktop/support, lossless
-    2R_DYNAMIC.md         ← 2R mode: video/animation
-    47_GAMING.md          ← 47 mode: gaming, no compromises
+    AR2R47_MODES.md       ← the three operating modes (AR / 2R / 47)
+  tasks/
+    01_ABSOLUTE_NO_DELAY_VISIBLE_REGION.md    ← Task-01 (implemented)
+    02_SILICON_MARGINAL_UTILITY_SCHEDULER.md  ← Task-02 (implemented)
 ```
+
+Files marked `[planned]` are referenced by this spec family but not
+yet written — their contents are currently scattered as sections in
+the existing documents (e.g. FEC and liveness live in `SDUDP.md`).
 
 ---
 
@@ -108,5 +112,22 @@ creator of EVRT, EVRTCK, and the EvertyDesk platform.
 
 ## Current status
 
-Specification phase. No production code yet.
+Reference implementation in progress (EvertyDesk Lite, Rust) — the
+protocol core is implemented, unit-tested, and **live-verified**
+end-to-end (PC host ↔ Android phone over real WiFi, July 2026):
+
+| Layer | Module | Status |
+|-------|--------|--------|
+| Wire format (32-byte header, magic `EVR2`) | `src/evrt2_packet.rs` | ✅ tested |
+| XOR FEC + length-prefix recovery | `src/evrt2_fec.rs` | ✅ tested |
+| Adaptive jitter buffer | `src/evrt2_jitter.rs` | ✅ live |
+| AR2R47 mode state machine | `src/evrt2_modes.rs` | ✅ tested, not yet driving a live session |
+| Task-01 scheduler (visible region, send order, breach) | `src/evrt2_scheduler.rs` | ✅ live |
+| Attention Map (motion + focus + surprise) | `src/evrt2_attention.rs` | ✅ live |
+| SD-UDP session engine (handshake, reassembly, FEC) | `src/evrt2_session.rs` | ✅ live |
+| Execution Capability registry (Task-02) | `src/execution_capability.rs` | ✅ in production EVRTCK path |
+| EVRT2-only live session mode | `src/evrt2_experiment.rs` | ✅ live |
+
+See [`ROADMAP.md`](ROADMAP.md) for what is implemented versus still
+specification-only, and the phased plan forward.
 Existing EVRT + EVRTCK clients continue to operate unchanged.

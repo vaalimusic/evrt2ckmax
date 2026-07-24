@@ -2,7 +2,12 @@
 
 **Task ID:** EVRT2CKMAX-TASK-02  
 **Author:** Arthur Valiev  
-**Status:** Specification → pending implementation  
+**Status:** Implemented (2026-07) — `src/execution_capability.rs`
+(registry, calibration, marginal-utility `schedule()`); the
+`RAYON_THRESHOLD` constant in `evrtck.rs` is replaced by a calibrated
+`use_rayon(n)` decision, and `evrtck_wgpu.rs` registers as a real
+RoiEncoding provider. Remaining gap: `rebalance()` from
+ReceiverFeedback2 (Phase 4) — see `ROADMAP.md`.  
 **Depends on:** [`EVRT2CKMAX.md`](../codec/EVRT2CKMAX.md) — Valiev Law of
 Computational Opportunity, Execution Capability (object 5), the
 marginal utility test

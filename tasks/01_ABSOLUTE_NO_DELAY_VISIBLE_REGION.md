@@ -2,7 +2,13 @@
 
 **Task ID:** EVRT2CKMAX-TASK-01  
 **Author:** Arthur Valiev  
-**Status:** Specification → pending implementation  
+**Status:** Implemented (2026-07) — `src/evrt2_scheduler.rs`,
+`src/evrt2_attention.rs`, `src/evrt2_jitter.rs`, wired into the live
+EVRT2 stream in `src/evrt2_experiment.rs`. Remaining gaps: exact
+per-tile byte boundaries for the VISIBLE_REGION prefix (currently
+estimated from average dirty-tile cost), DEGRADE_SIGNAL is logged
+host-side but not yet emitted as a wire packet (client handler
+pending) — see `ROADMAP.md` Phase 1.  
 **Depends on:** [`EVRT2CKMAX.md`](../codec/EVRT2CKMAX.md) — Perceptual Age Field,
 Attention Map (object 1), Reconstruction Budget (object 3), Temporal APF
 
